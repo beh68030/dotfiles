@@ -204,7 +204,7 @@
 
 ;; rmail stuff
 ;(setenv "MAILHOST" "pop.gmail.com")
-;(setq rmail-primary-inbox-list '("po:beh68030@gmail.com")
+;(setq rmail-primary-inbox-list '("po:x")
 ;      rmail-pop-password-required t)
 
 
@@ -222,8 +222,8 @@
 (setq send-mail-function (quote smtpmail-send-it))
 (setq smtpmail-smtp-server "smtp.gmail.com")
 (setq smtpmail-smtp-service 587)
-(setq user-mail-address "beh68030@gmail.com")
-(setq user-full-name "beh68030")
+(setq user-mail-address "x")
+(setq user-full-name "x")
 ;(setq nnimap-authinfo-file "~/.emacs.d/.authinfo")
 ;(setq smtpmail-auth-credentials "~/.emacs.d/.authinfo")
 
