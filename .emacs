@@ -25,31 +25,12 @@
 
 (package-initialize)
 
-(setq my-package-list '(async 
-			auctex 
-			browse-kill-ring
-			column-marker 
-			company
-			company-auctex
-			dash 
-			evil
-			eww-lnum 
-			geiser
-			git-commit 
-			god-mode 
-			goto-last-change
-			helm 
-			helm-core 
-			hideshowvis
-			magit 
-			magit-popup 
-			neotree 
-			nlinum 
-			paredit 
-			rainbow-delimiters 
-			undo-tree
-			with-editor 
-			yasnippet))
+(setq package-selected-packages '(async auctex browse-kill-ring column-marker company company-auctex
+			dash eww-lnum geiser git-commit god-mode goto-last-change magit
+			paredit helm-core hideshowvis evil magit-popup neotree nlinum 
+			helm rainbow-delimiters undo-tree with-editor yasnippet))
+
+(package-install-selected-packages)
 
 ;(mapc #'package-install my-package-list)
 
@@ -138,6 +119,7 @@
 ;(global-rainbow-delimiters-mode) ; this has been deprecated...
 (require 'rainbow-delimiters)
 (setq rainbow-delimiters-max-face-count 7)
+(set-face-attribute 'rainbow-delimiters-depth-1-face nil :foreground "#ff0000")
 (set-face-attribute 'rainbow-delimiters-depth-2-face nil :foreground "#d75f00")
 (set-face-attribute 'rainbow-delimiters-depth-3-face nil :foreground "#ffff00")
 (set-face-attribute 'rainbow-delimiters-depth-4-face nil :foreground "#00ff00")
@@ -176,8 +158,7 @@
 ;		       (setq erc-fill-column (- (window-width) 2))))
 
 ;;; disable beep
-(setq ring-bell-function 'ignore
-      visible-bell t)
+(setq ring-bell-function 'ignore visible-bell t)
 
 ;;; show column numbers on the left
 (global-nlinum-mode)
@@ -187,8 +168,6 @@
   "insert text on X11's clipboard to current buffer."
   (interactive)
   (insert-string (shell-command-to-string "xsel -b --display :0")))
-
-(global-set-key (kbd "C-x y") 'x-paste)
 
 ;; copy from Emacs to X clipboard (needs xsel package)
 (defun x-copy ()
@@ -200,8 +179,10 @@
         (process-send-string proc (car kill-ring))
         (process-send-eof proc))))
 
+(global-set-key (kbd "C-x y") 'x-paste)
 (global-set-key (kbd "C-x w") 'x-copy)
 
+;;; print the date
 (global-set-key (kbd "C-c C-d") (lambda () (interactive) (insert (shell-command-to-string "date"))))
 
 ;; hilight current line
@@ -269,11 +250,14 @@
 (setq nlinum-format "%d> ")
 
 ;;; enable modal "vi" editing everywhere
-(evil-mode 1)
+(evil-mode 0)
 ;(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
 ;;; always make sure connections are tls'd
 (setq tls-checktrust 'ask)
+
+;;; disable the toolbar in gui emacs
+(tool-bar-mode 0)
 
 ;;; swap brackets with parentheses keys - no, prefer xmodmap
 ;(keyboard-translate ?\( ?\[)
@@ -281,4 +265,46 @@
 ;(keyboard-translate ?\) ?\])
 ;(keyboard-translate ?\] ?\))
 
-;;;; end of init.el
+;;; turn off undo-tree
+(global-undo-tree-mode -1)
+
+;;; disable erc timestamp
+(erc-timestamp-mode -1)
+
+;;; hide left/right bar
+(horizontal-scroll-bar-mode nil)
+
+;;; blink cursor in gui
+(blink-cursor-mode)
+
+;;; set default virtual keyboard
+(setq default-input-method 'german-postfix) ; 'japanese
+
+;;; move the cursor when scrolling the screen
+(setq scroll-preserve-screen-position 'always)
+
+(defun confirm-kill ()
+  "kill the server when closing, set to F8"
+  (interactive)
+  (if (y-or-n-p "Really kill the server?")
+    (progn (kill-emacs))
+  (progn (prin1 '(OK then)))))
+
+;;; map macro confirm-kill to f8 key
+(global-set-key (kbd "<f8>") 'confirm-kill)
+
+;;; map goto-line macro to F5
+(global-set-key (kbd "<f5>") 'goto-line)
+
+(fset 'show-buffer-list
+   (lambda (&optional arg) 
+     "easily show the buffer list, set to F6"
+     (interactive "p") 
+     (kmacro-exec-ring-item 
+      (quote ("0" 0 "%d")) arg)))
+
+;;; map macro show-buffer-list to f6 key
+(global-set-key (kbd "<f6>") 'show-buffer-list)
+
+;;; map calendar function to F7 key
+(global-set-key (kbd "<f7>") 'calendar)
