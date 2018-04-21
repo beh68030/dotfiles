@@ -1,5 +1,5 @@
 ;;;; my .emacs config file
-;;;; for emacs24 (nox)
+;;;; for emacs25 (nox)
 ;;;; sudo echo "@reboot    emacs --daemon" >>/var/spool/cron/crontabs/user
 
 ;;; don't start multiple instances
@@ -76,7 +76,7 @@
 ;; show column as well
 (column-number-mode t)
 
-;; change yes/no to y/n
+;; shorten yes/no to y/n
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; disable annoying autoindent
@@ -146,11 +146,11 @@
 ;(global-set-key (kbd "<right>") (quote scroll-right))
 ;(global-set-key (kbd "<left>") (quote scroll-left))
 
-;;; set this variable for SLY
-;(setq inferior-lisp-program "sbcl")
+;;; set the lisp repl backend
+(setq inferior-lisp-program "guile")
 
 ;;; tweak the auto reconnect for irc
-(setq erc-server-auto-reconnect t)
+;(setq erc-server-auto-reconnect t)
 
 ;;; make erc take up the whole screen width
 ; (add-hook 'window-configuration-change-hook 
@@ -183,7 +183,8 @@
 (global-set-key (kbd "C-x w") 'x-copy)
 
 ;;; print the date
-(global-set-key (kbd "C-c C-d") (lambda () (interactive) (insert (shell-command-to-string "date"))))
+(global-set-key (kbd "C-c C-d") (lambda () (interactive) 
+				  (insert (shell-command-to-string "date"))))
 
 ;; hilight current line
 (global-hl-line-mode 1)
@@ -191,20 +192,13 @@
 (set-face-foreground 'highlight nil)
 (set-face-underline 'highlight t)
 
-;; rmail stuff
-;(setenv "MAILHOST" "pop.gmail.com")
-;(setq rmail-primary-inbox-list '("po:xxx@gmail.com")
-;      rmail-pop-password-required t)
-
-
 ;; gnus stuff
 (setq gnus-select-method
       '(nnimap "gmail"
-	              (nnimap-address "imap.gmail.com")  ; it could also be
-					; imap.googlemail.com if that's your
-					; server.
-		             (nnimap-server-port "imaps")
-			            (nnimap-stream ssl)))
+;	       (nnimap-address "imap.googlemail.com")
+	       (nnimap-address "imap.gmail.com")
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
 
 (setq smtpmail-smtp-service 587
       gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
@@ -230,7 +224,7 @@
 ;;; choose how Gnus loads html articles
 ; (setq mm-text-html-renderer 'html2text)
 
-;;; turn off the disgusting colors that eww draws when reading a page's CSS
+;;; turn off the colors that eww draws when reading a page's CSS
 (defvar eww-disable-colorize t)
 (defun shr-colorize-region--disable (orig start end fg &optional bg &rest _)
   (unless eww-disable-colorize
@@ -272,13 +266,13 @@
 (erc-timestamp-mode -1)
 
 ;;; hide left/right bar
-(horizontal-scroll-bar-mode nil)
+;(scroll-bar-mode nil) ;(setq horizontal-scroll-bars nil)
 
 ;;; blink cursor in gui
 (blink-cursor-mode)
 
 ;;; set default virtual keyboard
-(setq default-input-method 'german-postfix) ; 'japanese
+(setq default-input-method 'japanese) ; 'german-postfix/cyrillic-translit
 
 ;;; move the cursor when scrolling the screen
 (setq scroll-preserve-screen-position 'always)
@@ -290,21 +284,17 @@
     (progn (kill-emacs))
   (progn (prin1 '(OK then)))))
 
-;;; map macro confirm-kill to f8 key
-(global-set-key (kbd "<f8>") 'confirm-kill)
+(global-set-key (kbd "<f8>") 'confirm-kill) ; kill emacs server
 
-;;; map goto-line macro to F5
-(global-set-key (kbd "<f5>") 'goto-line)
+(global-set-key (kbd "<f5>") 'goto-line) ; easy jump
 
 (fset 'show-buffer-list
    (lambda (&optional arg) 
      "easily show the buffer list, set to F6"
      (interactive "p") 
      (kmacro-exec-ring-item 
-      (quote ("0" 0 "%d")) arg)))
+      (quote ("0" 0 "%d")) arg)))
 
-;;; map macro show-buffer-list to f6 key
-(global-set-key (kbd "<f6>") 'show-buffer-list)
+(global-set-key (kbd "<f6>") 'show-buffer-list) ; show buffers
 
-;;; map calendar function to F7 key
-(global-set-key (kbd "<f7>") 'calendar)
+(global-set-key (kbd "<f7>") 'run-lisp) ; launch lisp repl
