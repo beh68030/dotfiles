@@ -1,5 +1,5 @@
 ;;;; my .emacs config file
-;;;; for emacs25 (nox)
+;;;; compatible with emacs ver.25 (nox)
 ;;;; sudo echo "@reboot    emacs --daemon" >>/var/spool/cron/crontabs/user
 
 ;;; don't start multiple instances
