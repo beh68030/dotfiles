@@ -9,6 +9,7 @@
   (server-start))
 
 ;;; package management stuff 
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -25,14 +26,15 @@
 
 (package-initialize)
 
-(setq package-selected-packages '(async auctex browse-kill-ring column-marker company company-auctex
-			dash eww-lnum geiser git-commit god-mode goto-last-change magit
-			paredit helm-core hideshowvis evil magit-popup neotree nlinum 
-			helm rainbow-delimiters undo-tree with-editor yasnippet))
+(setq package-selected-packages '(async auctex browse-kill-ring column-marker
+			company company-auctex dash eww-lnum geiser git-commit
+			god-mode goto-last-change magit paredit helm-core
+			hideshowvis evil magit-popup neotree nlinum helm
+			rainbow-delimiters undo-tree with-editor yasnippet))
 
-(package-install-selected-packages)
+;(package-install-selected-packages)
 
-;(mapc #'package-install my-package-list)
+;(mapc #'package-install my-package-list) ; don't use this
 
 ;;; end of package stuff
 
@@ -54,12 +56,12 @@
 				register-alist 
 				file-name-history))
 
-;; keep backup files no matter what
-(setq vc-make-backup-files t)
+;; enable/disable backup~ files
+(setq make-backup-files t)
 
 ;; set the directory for ~ backups
 (setq backup-directory-alist
-      '(("." . "/home/user/.emacs.d/saves")))
+      '(("" . "~/.emacs.d/saves")))
 
 ;; scroll one line at a time
 (setq scroll-step 1)
@@ -116,7 +118,7 @@
 (setq frame-title-format "emacs - %b")
 
 ;; enable colored parens
-;(global-rainbow-delimiters-mode) ; this has been deprecated...
+;(global-rainbow-delimiters-mode) ; this has been deprecated
 (require 'rainbow-delimiters)
 (setq rainbow-delimiters-max-face-count 7)
 (set-face-attribute 'rainbow-delimiters-depth-1-face nil :foreground "#ff0000")
@@ -244,7 +246,7 @@
 (setq nlinum-format "%d> ")
 
 ;;; enable modal "vi" editing everywhere
-(evil-mode 0)
+;(evil-mode 1)
 ;(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 
 ;;; always make sure connections are tls'd
@@ -266,10 +268,8 @@
 (erc-timestamp-mode -1)
 
 ;;; hide left/right bar
-;(scroll-bar-mode nil) ;(setq horizontal-scroll-bars nil)
-
-;;; blink cursor in gui
-(blink-cursor-mode)
+;(scroll-bar-mode nil) 
+;(setq horizontal-scroll-bars nil)
 
 ;;; set default virtual keyboard
 (setq default-input-method 'japanese) ; 'german-postfix/cyrillic-translit
@@ -281,7 +281,7 @@
   "kill the server when closing, set to F8"
   (interactive)
   (if (y-or-n-p "Really kill the server?")
-    (progn (kill-emacs))
+    (progn (save-buffers-kill-emacs))
   (progn (prin1 '(OK then)))))
 
 (global-set-key (kbd "<f8>") 'confirm-kill) ; kill emacs server
